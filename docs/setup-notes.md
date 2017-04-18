@@ -36,3 +36,10 @@ telnyx_omega_pricing (master)$ mix phoenix.new .
       * running mix deps.get
       * running npm install && node node_modules/brunch/bin/brunch build
 ```
+
+### Create the databases
+
+```
+mix ecto.create
+MIX_ENV=test mix ecto.create
+```

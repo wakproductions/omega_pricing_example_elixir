@@ -15,7 +15,7 @@ config :telnyx_omega_pricing, TelnyxOmegaPricing.Endpoint,
                     cd: Path.expand("../", __DIR__)]]
 
 
-# Watch static and templates for browser reloading.
+# Watch static and templates for browser  reloading.
 config :telnyx_omega_pricing, TelnyxOmegaPricing.Endpoint,
   live_reload: [
     patterns: [
@@ -38,6 +38,6 @@ config :telnyx_omega_pricing, TelnyxOmegaPricing.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "telnyx_omega_pricing_dev",
+  database: "telnyx_omega_pricing_development",
   hostname: "localhost",
   pool_size: 10

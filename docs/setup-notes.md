@@ -1,0 +1,38 @@
+## Setup Notes for This App
+
+Elixir and Mix installed on my system. To get Phoenix into the project needed to install the Phoenix module into
+Mix via command: `mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez`
+
+Upgraded barebones Elixir project to Phoenix project:
+
+```
+telnyx_omega_pricing (master)$ mix phoenix.new .
+      * creating ./config/config.exs
+      config/config.exs already exists, overwrite? [Yn] Y
+      lib/telnyx_omega_pricing.ex already exists, overwrite? [Yn] Y
+      test/test_helper.exs already exists, overwrite? [Yn] Y
+      mix.exs already exists, overwrite? [Yn] Y
+      README.md already exists, overwrite? [Yn] Y
+      .gitignore already exists, overwrite? [Yn] Y
+      * creating ./brunch-config.js
+      * creating ./package.json
+      * creating ./web/static/css/app.css
+      * creating ./web/static/css/phoenix.css
+      * creating ./web/static/js/app.js
+      * creating ./web/static/js/socket.js
+      * creating ./web/static/assets/robots.txt
+      * creating ./web/static/assets/images/phoenix.png
+      * creating ./web/static/assets/favicon.ico
+      * creating ./test/controllers/page_controller_test.exs
+      * creating ./test/views/layout_view_test.exs
+      * creating ./test/views/page_view_test.exs
+      * creating ./web/controllers/page_controller.ex
+      * creating ./web/templates/layout/app.html.eex
+      * creating ./web/templates/page/index.html.eex
+      * creating ./web/views/layout_view.ex
+      * creating ./web/views/page_view.ex
+      
+      Fetch and install dependencies? [Yn] Y
+      * running mix deps.get
+      * running npm install && node node_modules/brunch/bin/brunch build
+```

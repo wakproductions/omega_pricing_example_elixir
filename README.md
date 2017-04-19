@@ -100,12 +100,16 @@ A Few Notes
 > somewhere useful. 
 > If you want to make a note in the README about the assumption or how you might approach it in a production scenario (as you have above) that's more than welcome too.
   
+* Going to assume that the API takes date values in the format 'YYYY-MM-DD' for the simplicity of making the conversions
+  easy.
+
   
 ## Libraries Used
 
 * The Poison Elixir library is used throughout this program to convert and parse JSON.
 * HTTPoison is used to handle the web API calls.
-* Mock library to handle mocking of API calls in the test environment.
+* ~~Mock library to handle mocking of API calls in the test environment.~~ Originally was going to mock the API call, but
+  learned that in Elixir things are mocked differently.
 * Timex used for handling dates
 
 ## Mapping of Scenarios to Test
@@ -127,7 +131,29 @@ A Few Notes
 * If you have a product record with a matching external_product_id but a different product name, log an error message 
   that warns the team that there is a mismatch. Do not update the price. 
 
+## Things I'm Still Figuring Out
 
+### How to Test the HTTP Calls
 
-%{productRecords: [%{id: 123456,name: "Nice Chair",price: "$30.25",category: "home-furnishings",discontinued: false},%{id: 234567,name: "Black & White TV",price: "$43.77",category: "electronics",discontinued: true}] }
+In Ruby it's common to mock web requests using a library like Webmock, which at the system level manipulates the data
+being returned by calls to the Internet. [The Elixir paradigm is different in that its preferred to isolate any subsystem
+that calls the internet into its own module.](http://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/)
 
+In Ruby I probably would have made a `FetchMonthlyPrices` interactor class that retrieves the data via HTTP, and use 
+Webmock to have the API call to the Internet return some fixture data. In Elixir, the recommended way of doing it
+is to abstract the part of the system that sends the web request and use an environment variable to change it out
+to a "mock" version for testing, and use the actual HTTP version in production/development. The commonly cited
+Platformatec blog post which demonstrates how to do this recommends using a Behavior (similar to a Java interface) to
+define the FetchMonthlyPrices class and build the HTTP and mock implementations off of that.
+
+I dislike this approach because it leaves the HTTP client (where the rubber meets the road) largely untested.
+The Platformatec blog author suggests making a separate test for the HTTP client that runs conditionally and 
+deliberately. 
+
+> Personally, I would test MyApp.Twitter.HTTP by directly reaching the Twitter API. We would run those tests only when 
+> needed in development and configure them as necessary in our build system. The @tag system in ExUnit, Elixir’s test 
+> library, provides conveniences to help us with that...
+
+For this sample project I couldn't perform that test because the Omega Pricing API doesn't exist irl. Also, I don't know
+yet whether the Mock version of the fixture should be in `lib` next to the HTTP version of the client, or somewhere
+in the test folder because it's used in the test environment.    

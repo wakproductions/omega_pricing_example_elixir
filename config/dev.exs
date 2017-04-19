@@ -41,3 +41,6 @@ config :telnyx_omega_pricing, TelnyxOmegaPricing.Repo,
   database: "telnyx_omega_pricing_development",
   hostname: "localhost",
   pool_size: 10
+
+# Environment variables/settings
+config :telnyx_omega_pricing, :omega_pricing_api, OmegaClient.FetchMonthlyPrices.HTTP

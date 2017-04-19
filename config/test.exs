@@ -17,3 +17,6 @@ config :telnyx_omega_pricing, TelnyxOmegaPricing.Repo,
   database: "telnyx_omega_pricing_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Environment variables/settings
+config :telnyx_omega_pricing, :omega_pricing_api, OmegaClient.FetchMonthlyPrices.Mock

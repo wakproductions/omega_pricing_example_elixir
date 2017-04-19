@@ -8,7 +8,7 @@ defmodule TelnyxOmegaPricing.Fixtures.FetchMonthlyPricesResponse do
   # to break this down further later.
 
   def fixture(:omega_api_json_response) do
-    Poison.encode(records) |> elem(1)
+    Poison.encode(records()) |> elem(1)
   end
 
   defp records do

@@ -91,10 +91,22 @@ A Few Notes
   I've downloaded data sets similar to this in Ruby which were thousands of records long and it still processed quickly.
 * The spec did not state exactly how to "Explicitly log that there is a new product and that you are creating a new 
   product." I plan to do this by creating a new past_price record with a price_change value of nil.
+* Regarding how to log errors, I asked the "product owner" the expectation on how this is to be done. Received the
+  following response. Given that, I'm just going to print messages to STDOUT and not worry about the distinction of 
+  STDERR. 
+  
+> The word "log" in the task should be taken to mean log a message to standard error or standard out.
+> You can work under the assumption that a collector outside the app would be gathering these logs and shipping them
+> somewhere useful. 
+> If you want to make a note in the README about the assumption or how you might approach it in a production scenario (as you have above) that's more than welcome too.
+  
   
 ## Libraries Used
 
 * The Poison Elixir library is used throughout this program to convert and parse JSON.
+* HTTPoison is used to handle the web API calls.
+* Mock library to handle mocking of API calls in the test environment.
+* Timex used for handling dates
 
 ## Mapping of Scenarios to Test
 

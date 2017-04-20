@@ -7,7 +7,7 @@ defmodule OmegaClient.FetchMonthlyPrices.Mock do
     test support folder.
   """
   def call do
-    TelnyxOmegaPricing.Fixtures.FetchMonthlyPricesResponse.fixture(:omega_api_json_response)
+    TelnyxOmegaPricing.Fixtures.FetchMonthlyPricesResponse.fixture(:omega_api_response_as_json)
   end
 
 end

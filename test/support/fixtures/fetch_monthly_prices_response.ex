@@ -7,14 +7,15 @@ defmodule TelnyxOmegaPricing.Fixtures.FetchMonthlyPricesResponse do
   # data. For the purposes of this demo, I think a single large test fixture is fine - refactoring can be done
   # to break this down further later.
 
-  def fixture(:omega_api_json_response) do
-    Poison.encode(records()) |> elem(1)
+  def fixture(:omega_api_response_as_json) do
+    Poison.encode(fixture(:omega_api_response_as_list)) |> elem(1)
   end
 
-  defp records do
+  def fixture(:omega_api_response_as_list) do
     [
       %{id: 123456,name: "Nice Chair",price: "$30.25",category: "home-furnishings",discontinued: false},
       %{id: 234567,name: "Black & White TV",price: "$43.77",category: "electronics",discontinued: true},
     ]
   end
+
 end

@@ -102,6 +102,9 @@ A Few Notes
   
 * Going to assume that the API takes date values in the format 'YYYY-MM-DD' for the simplicity of making the conversions
   easy.
+* One thing I notice about the past price information example is that the JSON returned lacks a "price_date", which is 
+  often returned by similar APIs. I find it odd that the parameters to be sent include a start and end date, but a date
+  is not returned by the API. What if the price changed multiple times in the given time frame? 
 
   
 ## Libraries Used

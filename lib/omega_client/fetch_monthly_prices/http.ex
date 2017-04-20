@@ -19,7 +19,7 @@ defmodule OmegaClient.FetchMonthlyPrices.HTTP do
   # because we are using a mock to run the test suite, this code won't actually run in real life.
   defp params do
     %{
-      yourapi_key:  "abc123key",  # TODO put this value in a constants module or pull from environment variables
+      yourapi_key:  "abc123key",  # TODO set this value up so it's pulled from environment variables
       start_date:   to_string(Timex.today |> Timex.shift(months: -1)),
       end_date:     to_string(Timex.today),
     }

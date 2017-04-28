@@ -75,13 +75,34 @@ A Few Notes
 
 # Implementation Notes
 
-* Since the API we're trying to query doesn't really exist, going to figure out a way of stubbing those requests.
+* Since the API we're trying to query doesn't really exist, will have to rely on just the test suite and stubbing
+  of data to demonstrate how this works.
 
-* Modules needed:
-  - RetrieveMonthlyPricingData > returns the JSON
-  - InsertRetrievedPricingDataJSON (takes JSON from RetrieveMonthlyPricingData)
-  - UpdatePricingData - module that executes the overall process. should be the equivalent of a Rails rake task 
+* Decided to layer the internal workflow among the following modules and respective functionality:
+  - OmegaClient.FetchMonthlyPrices.xxxx - the low level module that makes the web request and returns the received JSON.
+    This is the part of the system that will be stubbed with a test version for running the test suite. 
+  - RetrieveMonthlyPricingData - initiates the former, manages the whole process and defers to UpdatePrice. If we were
+    to have a job running that occasionally initiates the process of updating our database, it would call this function. 
+  - UpdatePrices - takes a line item of pricing data and runs the logic specified from step #3 
   
+## Mapping of Scenarios in Requirement #3
+
+**3a. We have external_product_id, same name, price is different**
+
+* Create new past_price record
+* Update the `products` table price
+* <ignore the discontinued flag>
+
+**3b. We do not have external_product_id, product is not discontinued**
+
+* Create new product
+* Create past price record with price_change value of nil (see Assumptions section above) 
+
+**3c. We have external_product_id, different product name**
+
+* If you have a product record with a matching external_product_id but a different product name, log an error message 
+  that warns the team that there is a mismatch. Do not update the price. 
+
 ## Assumptions
 
 * The data set returned by the Omega Pricing API is going to be small enough that it could be processed in a single
@@ -112,29 +133,11 @@ A Few Notes
 * The Poison Elixir library is used throughout this program to convert and parse JSON.
 * HTTPoison is used to handle the web API calls.
 * ~~Mock library to handle mocking of API calls in the test environment.~~ Originally was going to mock the API call, but
-  learned that in Elixir things are mocked differently.
+  learned that in Elixir mocks are discouraged.
 * Timex used for handling dates
 
-## Mapping of Scenarios to Test
 
-
-**We have external_product_id, same name, price is different**
-
-* Create new past_price record
-* Update the `products` table price
-* <ignore the discontinued flag>
-
-**We do not have external_product_id, product is not discontinued**
-
-* Create new product
-* Create past price record with price_change value of nil (see Assumptions section above) 
-
-**We have external_product_id, different product name**
-
-* If you have a product record with a matching external_product_id but a different product name, log an error message 
-  that warns the team that there is a mismatch. Do not update the price. 
-
-## Things I'm Still Figuring Out
+## Things I'm Still Figuring Out & Want to Improve
 
 ### How to Test the HTTP Calls
 
@@ -159,4 +162,64 @@ deliberately.
 
 For this sample project I couldn't perform that test because the Omega Pricing API doesn't exist irl. Also, I don't know
 yet whether the Mock version of the fixture should be in `lib` next to the HTTP version of the client, or somewhere
-in the test folder because it's used in the test environment.    
+in the test folder because it's used in the test environment.
+
+### Validation of Data / Error Handling
+
+There are a lot of areas where something could go wrong with the system such as a bad API response, problem with the
+database, sometimes you get bad data types back from the API, etc. For this project I kind of assumed that the 
+underlying technologies were stable. However, if I were to work on this longer I would identify areas where errors
+could occur (such as getting an :error response from Ecto) and make the appropriate contingency handling code.
+When working in Ruby I often use rescue blocks to cleanly handle errors, sometimes using that to make an error message
+more meaningful if I know the specific cause of the issue.
+
+### Test Coverage
+
+Starting with the mocking of the web request, I was surprised to find that the test paradigms in Elixir are different
+in some ways from Ruby on Rails. In Rails I'm used to making mocks and more elaborate fixtures in RSpec. From a syntax
+standpoint, some of the ideas such as how test data is set up is different. In RSpec I use the `let` and `before`
+blocks frequently, but Elixir has its own parallel using `context` and `setup`. Getting in sync with the Elixir
+way of thinking to make test inputs was challenging and I think will take more time for me to perfect.
+
+I know the paradigm in Elixir is to use smaller chunks of data to test, but for convenience I included all of the conditions
+in requirement #3 (the update rules for past prices) in a single test for UpdatePrices. It might be a good idea
+to break down the test into smaller fixtures and have a separate test of each business case.  
+
+### Namespacing
+
+I'm still a little rough on `import` vs `use` in figuring out how namespaces are typically handled. Still finding
+my way around contextually in the best way to include needed modules for tests.
+
+### Problems with the package manager
+
+Elixir's use of versioning seems less sophisticated and more error prone than Ruby bundler. I've installed Elixir using
+`brew` but this seems to be what most people in the community do vs using a tool like `rvm`. I can't imagine how
+this doesn't cause aggravating problems with version inconsistencies. I ran into the following
+error message when trying some tutorials from the Github [phoenix-examples](https://github.com/phoenix-examples):
+
+```
+== Compilation error on file web/router.ex ==
+** (CompileError) web/router.ex: internal error in v3_core;
+crash reason: {case_clause,
+    {'EXIT',
+        {badarg,
+            [{erl_anno,anno_info,[-1],[{file,"erl_anno.erl"},{line,360}]},
+             {v3_core,record_anno,2,[{file,"v3_core.erl"},{line,2410}]},
+             {v3_core,expr,2,[{file,"v3_core.erl"},{line,539}]},
+             {v3_core,safe,2,[{file,"v3_core.erl"},{line,1593}]},
+             {v3_core,expr,2,[{file,"v3_core.erl"},{line,528}]},
+             {v3_core,safe,2,[{file,"v3_core.erl"},{line,1593}]},
+             {v3_core,'-safe_list/2-anonymous-0-',2,
+                 [{file,"v3_core.erl"},{line,1608}]},
+             {lists,foldr,3,[{file,"lists.erl"},{line,1276}]}]}}}
+
+  in function  compile:'-select_passes/2-anonymous-2-'/2 (compile.erl, line 544)
+  in call from compile:'-internal_comp/4-anonymous-1-'/2 (compile.erl, line 329)
+  in call from compile:fold_comp/3 (compile.erl, line 355)
+  in call from compile:internal_comp/4 (compile.erl, line 339)
+  in call from compile:'-do_compile/2-anonymous-0-'/2 (compile.erl, line 177)
+  in call from compile:'-do_compile/2-anonymous-1-'/1 (compile.erl, line 190)
+    (stdlib) lists.erl:1338: :lists.foreach/2
+    (phoenix) expanding macro: Phoenix.Router.__before_compile__/1
+    web/router.ex:1: SprintPoker.Router (module)
+```

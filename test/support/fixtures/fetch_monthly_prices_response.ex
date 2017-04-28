@@ -15,7 +15,7 @@ defmodule TelnyxOmegaPricing.Fixtures.FetchMonthlyPricesResponse do
       %{id: 123456,name: "Nice Chair",price: "$30.25",category: "home-furnishings",discontinued: false},
       %{id: 234567,name: "Black & White TV",price: "$43.77",category: "electronics",discontinued: true},  # gets ignored
       %{id: 1111,name: "An Existing Product",price: "$50.12",category: "electronics",discontinued: false},
-      %{id: 1112,name: "A Now-Discontinued Product",price: "$60.23",category: "toys",discontinued: true},
+      %{id: 1112,name: "A Now-Discontinued Product",price: "$6.23",category: "toys",discontinued: true},
       %{id: 3333,name: "A Product With a New Name",price: "$6.66",category: "lingerie",discontinued: true}, # error
     ]
   end

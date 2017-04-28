@@ -79,11 +79,11 @@ A Few Notes
   of data to demonstrate how this works.
 
 * Decided to layer the internal workflow among the following modules and respective functionality:
-  - OmegaClient.FetchMonthlyPrices.xxxx - the low level module that makes the web request and returns the received JSON.
+  - **OmegaClient.FetchMonthlyPrices.xxxx** - the low level module that makes the web request and returns the received JSON.
     This is the part of the system that will be stubbed with a test version for running the test suite. 
-  - RetrieveMonthlyPricingData - initiates the former, manages the whole process and defers to UpdatePrice. If we were
+  - **RetrieveMonthlyPricingData** - initiates the former, manages the whole process and defers to UpdatePrice. If we were
     to have a job running that occasionally initiates the process of updating our database, it would call this function. 
-  - UpdatePrices - takes a line item of pricing data and runs the logic specified from step #3 
+  - **UpdatePrices** - takes a line item of pricing data and runs the logic specified from step #3 
   
 ## Mapping of Scenarios in Requirement #3
 

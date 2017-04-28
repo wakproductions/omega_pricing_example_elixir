@@ -10,9 +10,8 @@ defmodule RetrieveMonthlyPricingData do
     |> elem(1)
     |> list_of_maps_to_atom_keys
 
-
-
     # Perform update of the database
+    
 
   end
 

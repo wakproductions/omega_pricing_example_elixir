@@ -190,6 +190,8 @@ to break down the test into smaller fixtures and have a separate test of each bu
 I'm still a little rough on `import` vs `use` in figuring out how namespaces are typically handled. Still finding
 my way around contextually in the best way to include needed modules for tests.
 
+Also, I should probably namespace the lib modules `AddProduct`, `UpdatePrices` into a subdirectory.
+
 ### Problems with the package manager
 
 Elixir's use of versioning seems less sophisticated and more error prone than Ruby bundler. I've installed Elixir using

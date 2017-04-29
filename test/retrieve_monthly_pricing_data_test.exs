@@ -74,6 +74,8 @@ defmodule RetrieveMonthlyPricingDataTest do
       RetrieveMonthlyPricingData.call
       assert updated_product_database_records() == expected_product_database_records()
       assert updated_past_price_database_records() == expected_past_price_database_records()
+
+      # TODO need a test to make certain ErrorLogger is called for case 3c
     end
 
   end

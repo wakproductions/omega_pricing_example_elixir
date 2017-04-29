@@ -1,4 +1,5 @@
 defmodule RetrieveMonthlyPricingData do
+  import UpdatePrices
   import Utilities
 
   @fetch_monthly_prices_api Application.get_env(:telnyx_omega_pricing, :omega_pricing_api)
@@ -9,10 +10,7 @@ defmodule RetrieveMonthlyPricingData do
     |> Poison.decode
     |> elem(1)
     |> list_of_maps_to_atom_keys
-
-    # Perform update of the database
-    
-
+    |> UpdatePrices.call
   end
 
 end

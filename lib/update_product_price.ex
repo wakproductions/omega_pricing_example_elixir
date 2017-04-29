@@ -6,16 +6,12 @@ defmodule UpdateProductPrice do
   # TODO Can probably use a guard clause and changing the input to a keyword list. Still figuring out the
   # TODO best practice here. Also, better to use keyword list input than map inputs?
   def call(product_detail) do
-    new_price = product_detail[:new_price] |> convert_price_string_to_cents
+    new_price = product_detail[:new_price] |> Utilities.convert_price_string_to_cents
     previous_price = previous_price(product_detail[:product_id])
     percentage_change = percentage_change(previous_price, new_price)
 
     update_product_price(product_detail[:product_id], new_price)
     create_past_price(product_detail[:product_id], new_price, percentage_change)
-  end
-
-  defp convert_price_string_to_cents(money_string) do
-    money_string |> String.replace("$", "") |> String.replace(".", "") |> String.to_integer
   end
 
   defp create_past_price(product_id, new_price, percentage_change) do

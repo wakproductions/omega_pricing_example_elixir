@@ -193,6 +193,14 @@ my way around contextually in the best way to include needed modules for tests.
 Also, I should probably namespace the lib modules `AddProduct`, `UpdateProductPrice` into a subdirectory. Still figuring
 out the best way of organizing modules.
 
+### Best way of calling functions
+
+In Ruby 2.0 I like to use the strongly typed parameters function to pass hashes of data into methods. Elixir gives
+you similar options via maps and keyword lists. I'm still trying to decide on a consistent, best practice way of
+passing parameters to functions. It's unclear to me when is the best time to use a map and when you should use
+a keyword list. I think it will make more sense when I integrate Elixir's guard clause/matching methodology
+into my function declarations, which I haven't applied yet in this version of the program. 
+
 ### Problems with the package manager
 
 Elixir's use of versioning seems less sophisticated and more error prone than Ruby bundler. I've installed Elixir using
@@ -226,3 +234,6 @@ crash reason: {case_clause,
     (phoenix) expanding macro: Phoenix.Router.__before_compile__/1
     web/router.ex:1: SprintPoker.Router (module)
 ```
+
+I'm sure there are ways of working around this which I will figure out in time, just noting this issue encountered 
+when looking up Elixir examples.

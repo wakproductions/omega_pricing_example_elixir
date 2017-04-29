@@ -2,6 +2,7 @@ require IEx
 
 defmodule RetrieveMonthlyPricingDataTest do
   use ExUnit.Case
+  import Ecto.Query
   import TelnyxOmegaPricing.Fixtures.PastPrices
   import TelnyxOmegaPricing.Fixtures.Products
 
@@ -36,7 +37,7 @@ defmodule RetrieveMonthlyPricingDataTest do
         %{product_id: 3, price: 4000, percentage_change: nil},
         %{product_id: 1, price: 5012, percentage_change: 401.2},
         %{product_id: 2, price: 623, percentage_change: -68.85},
-        %{product_id: 4, price: 3025, percentage_change: nil},
+        %{product_id: new_product_id, price: 3025, percentage_change: nil},
       ]
     end
 
@@ -52,8 +53,27 @@ defmodule RetrieveMonthlyPricingDataTest do
       ]
     end
 
-    def updated_past_price_database_records do
-      Repo.all(PastPrice)
+    defp find_record(record_set, attrs) do
+      record_set
+      |> Enum.find(fn(x)-> x == attrs end)
+    end
+
+    # This is kind of a hacky solution to getting the product_id of the newly added product
+    defp new_product_id do
+      from(r in Product, select: r.id, order_by: [desc: r.id], limit: 1) |> Repo.all |> List.first
+    end
+
+    defp past_price_records_count do
+      from(r in PastPrice, select: count(r.id)) |> Repo.all |> List.first
+    end
+
+    defp product_records_count do
+      from(r in Product, select: count(r.id)) |> Repo.all |> List.first
+    end
+
+    defp updated_past_price_database_records do
+      from(r in PastPrice, order_by: r.id)
+      |> Repo.all
       |> Enum.map(fn(p) ->
         p
         |> Map.from_struct
@@ -62,7 +82,8 @@ defmodule RetrieveMonthlyPricingDataTest do
     end
 
     defp updated_product_database_records do
-      Repo.all(Product)
+      from(r in Product, order_by: r.id)
+      |> Repo.all
       |> Enum.map(fn(p) ->
         p
         |> Map.from_struct
@@ -72,10 +93,23 @@ defmodule RetrieveMonthlyPricingDataTest do
 
     test "makes the correct DB changes" do
       RetrieveMonthlyPricingData.call
-      assert updated_product_database_records() == expected_product_database_records()
-      assert updated_past_price_database_records() == expected_past_price_database_records()
 
-      # TODO need a test to make certain ErrorLogger is called for case 3c
+      assert past_price_records_count() == expected_past_price_database_records() |> length
+      assert product_records_count() == expected_product_database_records() |> length
+
+      past_price_records = updated_past_price_database_records()
+      expected_past_price_database_records()
+      |> Enum.map(fn(r) ->
+        assert find_record(past_price_records, r) != nil, "Couldn't find expected records #{inspect(r)}"
+      end)
+
+      product_records = updated_product_database_records()
+      expected_product_database_records()
+      |> Enum.map(fn(r) ->
+        assert find_record(product_records, r) != nil, "Couldn't find expected records #{inspect(r)}"
+      end)
+
+      # TODO need a test to make certain ErrorLogger is called for case 3c - maybe create a mock module?
     end
 
   end

@@ -9,4 +9,9 @@ defmodule TelnyxOmegaPricing.Product do
     timestamps
   end
 
+    def changeset(struct, params \\ %{}) do
+      struct
+      |> cast(params, [:external_product_id, :price, :product_name])
+    end
+
 end

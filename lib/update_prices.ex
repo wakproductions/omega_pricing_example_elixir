@@ -1,7 +1,11 @@
 defmodule UpdatePrices do
-  import Ecto.Query
   alias TelnyxOmegaPricing.Product, as: Product
   alias TelnyxOmegaPricing.Repo, as: Repo
+
+  import Ecto.Query
+  import AddProduct
+  import ErrorLogger
+  import UpdateProductPrice
 
   def call(received_api_data) do
     received_api_data |> Enum.map(&update_item/1)
@@ -32,17 +36,17 @@ defmodule UpdatePrices do
     cond do
       # **3a. We have external_product_id, same name, price is different**
       existing_item_details != nil && existing_item_details.product_name == new_item_details.name ->
-        AddNewPrice.(new_item_details)
+        UpdateProductPrice.call(new_item_details)
 
       # **3b. We do not have external_product_id, product is not discontinued**
       existing_item_details == nil && new_item_details.discontinued == false ->
-        AddProduct.(new_item_details)
+        AddProduct.call(new_item_details)
 
       # **3c. We have external_product_id, different product name**
       existing_item_details != nil && existing_item_details.product_name != new_item_details.name ->
-        ErrorLogger.("Mismatching product name for external ID #{new_item_details.id}, " <>
-                     "Existing name: #{existing_item_details.product_name}, New Name: #{new_item_details.name}"
-                    )
+        ErrorLogger.call("Mismatching product name for external ID #{new_item_details.id}, " <>
+                         "Existing name: #{existing_item_details.product_name}, New Name: #{new_item_details.name}"
+                        )
     end
 
   end

@@ -9,4 +9,10 @@ defmodule TelnyxOmegaPricing.PastPrice do
     timestamps
   end
 
+  def changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:product_id, :price, :percentage_change])
+  end
+
+
 end

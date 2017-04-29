@@ -34,20 +34,6 @@ defmodule UpdatePrices do
     new_item_details |> inspect |> IO.puts
     existing_item_details |> inspect |> IO.puts
 
-    from(r in Product, select: %{id: r.id, external_product_id: r.external_product_id, product_name: r.product_name, price: r.price})
-    |> Repo.all |> Enum.map(fn(x)-> x |> inspect |> IO.puts end)
-
-    IO.puts "\n\n"
-
-    from(r in PastPrice, select: %{product_id: r.product_id, price: r.price, percentage_change: r.percentage_change})
-    |> Repo.all |> Enum.map(fn(x)-> x |> inspect |> IO.puts end)
-    IO.puts "\n\n"
-
-    new_item_details |> inspect |> IO.puts
-    IO.puts "\n\n"
-    existing_item_details |> inspect |> IO.puts
-
-
     cond do
       # **3a. We have external_product_id, same name, price is different**
       existing_item_details != nil && existing_item_details.product_name == new_item_details.name ->

@@ -6,6 +6,7 @@ defmodule AddProduct do
   def call(external_product_id, product_name, price) do
     price_as_cents = Utilities.convert_price_string_to_cents(price)
 
+    MessageLogger.call("Creating new product #{external_product_id} - #{product_name}")
     new_product = create_product(external_product_id, product_name, price_as_cents)
     create_past_price(new_product.id, price_as_cents)
   end

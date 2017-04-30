@@ -31,8 +31,8 @@ defmodule UpdatePrices do
   defp update_item(new_item_details) do
     existing_item_details = existing_product(new_item_details.id)
 
-    new_item_details |> inspect |> IO.puts
-    existing_item_details |> inspect |> IO.puts
+#    new_item_details |> inspect |> IO.puts
+#    existing_item_details |> inspect |> IO.puts
 
     cond do
       # **3a. We have external_product_id, same name, price is different**
